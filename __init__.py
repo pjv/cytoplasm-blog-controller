@@ -36,6 +36,13 @@ def metadata(file):
                 % (file))
     return meta, separated.group(2)
 
+def slugify(value):
+    """
+    converts to lowercase, removes non-alpha characters,
+    and converts spaces to hyphens.
+    """
+    value = re.sub('[^\w\s-]', '', value).strip().lower()
+    return re.sub('[-\s]+', '-', value)
 
 class Post(object):
     "A sort-of file-like object that defines a post."
@@ -69,7 +76,8 @@ class Post(object):
         if self.slug == None:
             # if the slug != None, then the user has defined it in the metadata
             # and we should not override it.
-            self.slug = urllib.quote(self.title.replace(" ", "-"))
+            #self.slug = urllib.quote(self.title.replace(" ", "-"))
+            self.slug = slugify(self.title)
         # this is the relative url for the post, relative from the destination
         # directory:
         self.url = os.path.join(str(self.year), str(self.month), self.slug + 
